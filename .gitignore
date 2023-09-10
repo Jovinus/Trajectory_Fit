@@ -1,1 +1,5 @@
 data/
+result/
+*docx
+*.csv
+.DS_Store
