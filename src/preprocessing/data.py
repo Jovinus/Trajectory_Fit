@@ -11,6 +11,22 @@ df_raw = (
     pd.read_csv("../../data/raw/trajectory_data.csv")
     .sort_values(["HPCID", "SM_DATE"])
     .reset_index(drop=True)
+    .assign(
+        sex = lambda df: np.where(df["sex"] == True, 1, 0),
+        MVPA = lambda df: np.where(df["MVPA"] == True, 1, 0),
+        Smoke = lambda df: np.where(df["Smoke"] == True, 1, 0),
+        Diabetes = lambda df: np.where(df["Diabetes"] == True, 1, 0),
+        Hypertension = lambda df: np.where(df["Hypertension"] == True, 1, 0),
+        HTN_med = lambda df: np.where(df["HTN_med"] == True, 1, 0),
+        Hyperlipidemia = lambda df: np.where(df["Hyperlipidemia"] == True, 1, 0),
+        Hepatatis = lambda df: np.where(df["Hepatatis"] == True, 1, 0),
+        ALC = lambda df: np.where(df["ALC"] == True, 1, 0),
+        MED_HYPERTENSION = lambda df: np.where(df["MED_HYPERTENSION"] == True, 1, 0),
+        MED_HYPERLIPIDEMIA = lambda df: np.where(df["MED_HYPERLIPIDEMIA"] == True, 1, 0),
+    )
+    .drop(
+        columns=["CDW_NO", "ID"]
+    )
 )
 
 display(df_raw.head())
@@ -151,4 +167,17 @@ def make_age_sex_adjusted_crf_tertile(
 # %%
 
 df_preprocessed = make_age_sex_adjusted_crf_tertile(df_preprocessed)
+
+(
+    df_preprocessed
+    .to_csv("../../data/preprocessed/stat_set.csv", index=False)
+)
+
+(
+    df_preprocessed
+    .fillna(df_preprocessed.median())
+    .to_csv("../../data/preprocessed/modeling_set.csv", index=False)
+)
+
+
 # %%
